@@ -1,8 +1,27 @@
-<!doctype html><meta charset="utf-8" />
-<h3>initData</h3>
+<!doctype html>
+<meta charset="utf-8" />
+<title>InitData capture</title>
+<h3>Telegram initData</h3>
 <pre id="out">Loading…</pre>
-<button onclick="navigator.clipboard.writeText(out.textContent)">Copy</button>
+<button id="copy">Copy</button>
 <script>
-  const initData = window.Telegram?.WebApp?.initData || "";
-  out.textContent = initData || "(empty)";
+  // Иногда init_data приходит и как параметр tgWebAppData в URL — учтём оба варианта
+  const tg = window.Telegram && window.Telegram.WebApp;
+  const fromAPI = tg?.initData || "";
+  const fromQS = new URLSearchParams(location.search).get("tgWebAppData") || "";
+  const initData = fromAPI || fromQS || "";
+
+  document.getElementById("out").textContent = initData || "(empty)";
+
+  document.getElementById("copy").onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(initData);
+      alert("Copied!");
+    } catch (e) {
+      alert("Copy failed. Select text manually.");
+    }
+  };
+
+  // (опционально) раскрыть WebApp UI
+  try { tg?.expand(); } catch(e) {}
 </script>
