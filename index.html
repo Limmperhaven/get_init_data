@@ -1,27 +1,63 @@
 <!doctype html>
-<meta charset="utf-8" />
-<title>InitData capture</title>
-<h3>Telegram initData</h3>
-<pre id="out">Loading…</pre>
-<button id="copy">Copy</button>
-<script>
-  // Иногда init_data приходит и как параметр tgWebAppData в URL — учтём оба варианта
-  const tg = window.Telegram && window.Telegram.WebApp;
-  const fromAPI = tg?.initData || "";
-  const fromQS = new URLSearchParams(location.search).get("tgWebAppData") || "";
-  const initData = fromAPI || fromQS || "";
-
-  document.getElementById("out").textContent = initData || "(empty)";
-
-  document.getElementById("copy").onclick = async () => {
-    try {
-      await navigator.clipboard.writeText(initData);
-      alert("Copied!");
-    } catch (e) {
-      alert("Copy failed. Select text manually.");
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>InitData capture</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: monospace;
+      padding: 20px;
     }
-  };
+    #out {
+      white-space: pre-wrap;
+      word-break: break-all;
+      padding: 10px;
+      border: 1px solid #555;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+    button {
+      background: #444;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #666;
+    }
+  </style>
+</head>
+<body>
+  <h3>Telegram initData</h3>
+  <pre id="out">Loading…</pre>
+  <button id="copy">Copy</button>
 
-  // (опционально) раскрыть WebApp UI
-  try { tg?.expand(); } catch(e) {}
-</script>
+  <script>
+    function getInitData() {
+      const tg = window.Telegram && window.Telegram.WebApp;
+      const fromAPI = tg?.initData || "";
+      const fromQS = new URLSearchParams(location.search).get("tgWebAppData") || "";
+      return fromAPI || fromQS || "";
+    }
+
+    const initData = getInitData();
+    document.getElementById("out").textContent = initData || "(empty)";
+
+    document.getElementById("copy").onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(initData);
+        alert("Copied!");
+      } catch (e) {
+        alert("Copy failed. Select text manually.");
+      }
+    };
+
+    // (опционально) развернём WebApp во весь экран
+    try { window.Telegram?.WebApp?.expand(); } catch(e) {}
+  </script>
+</body>
+</html>
