@@ -133,5 +133,12 @@
     setTimeout(render, 300);
     setTimeout(render, 1000);
   </script>
+  <script>
+  const tg = window.Telegram && window.Telegram.WebApp;
+  console.log('tg object:', tg);
+  console.log('platform:', tg?.platform);       // webk, webz, ios, android, tdweb, windows, macos
+  console.log('initData length:', (tg?.initData||'').length);
+  console.log('initDataUnsafe:', tg?.initDataUnsafe); // должен быть объектом с user/auth_date
+</script>
 </body>
 </html>
