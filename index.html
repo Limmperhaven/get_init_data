@@ -1,0 +1,8 @@
+<!doctype html><meta charset="utf-8" />
+<h3>initData</h3>
+<pre id="out">Loading…</pre>
+<button onclick="navigator.clipboard.writeText(out.textContent)">Copy</button>
+<script>
+  const initData = window.Telegram?.WebApp?.initData || "";
+  out.textContent = initData || "(empty)";
+</script>
